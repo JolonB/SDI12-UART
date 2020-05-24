@@ -2,8 +2,8 @@
 
 Implementation of SDI-12 using UART driver
 
-- [What is this?](#what-is-this-)
-- [What is SDI-12?](#what-is-sdi-12-)
+- [What is this?](#what-is-this)
+- [What is SDI-12?](#what-is-sdi-12)
 - [SDI-12 Protocol](#sdi-12-protocol)
 
 ---
