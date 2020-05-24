@@ -27,6 +27,7 @@ jobs:
       with:
         # files, directories, or globs
         files: .
+        rules: ".github/rules/md-rules.js"
 
     - name: markdown-link-check
       uses: gaurav-nelson/github-action-markdown-link-check@1.0.2

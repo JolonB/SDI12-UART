@@ -1,4 +1,5 @@
 # SDI12-UART
+
 Implementation of SDI-12 using UART driver
 
 - [What is this?](#what-is-this-)
@@ -16,6 +17,5 @@ I was aware of the [Arduino-SDI-12](https://github.com/EnviroDIY/Arduino-SDI-12)
 The goal of this repository is to show a simple way to implement SDI-12 on *any* device with a UART driver.
 
 ## What is SDI-12?
-
 
 ## SDI-12 Protocol
