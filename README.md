@@ -1,12 +1,13 @@
 # SDI12-UART
 
-Implementation of SDI-12 using a UART driver
+Microcontroller independent implementation of SDI-12 over UART.
+May also work for any sort of single wire communications protocol (not tested).
 
 - [What is this?](#what-is-this)
 - [What is SDI-12?](#what-is-sdi-12)
 - [SDI-12 Protocol](#sdi-12-protocol)
-  * [Electrical Interface](#electrical-interface)
-  * [Communication](#communication)
+    - [Electrical Interface](#electrical-interface)
+    - [Communication](#communication)
 - [Implementation](#implementation)
 - [References](#references)
 
@@ -37,6 +38,8 @@ One key reason for using SDI-12 sensors is that *all* SDI-12 sensors follow the 
 
 ## SDI-12 Protocol
 
+*All information from [2]*.
+
 ### Electrical Interface
 
 The SDI-12 protocol uses 2-3 wires to power and communicate with the sensor.
@@ -59,9 +62,77 @@ The 12 V line must be supplied with between 9.6 V and 16 V.
 
 ### Communication
 
+#### Data
+
+The SDI-12 protocol specifies that data recorders and sensors communicate via the exchange of printable ASCII characters over the data line.
+"Printable ASCII characters" range from \<space\> (hex: 20) to ~ (hex: 7E).
+There are three exceptions to this rule:
+
+- responses from a sensor end with a carriage return and linefeed (`\r\n` or \<CR\>\<LF\>)
+- CRC codes may include some non-printable ASCII characters
+- packets returned by the High Volume Binary command
+
+None of these use the most significant bit, which means that each "byte" of data needs to only be represented by 7 bits.
+The full format for an SDI-12 byte frame is:
+
+- 1 start bit
+- 7 data bits, LSB first
+- 1 even parity bit
+- 1 stop bit
+
+The first byte of any message should be the sensor address.
+This is `0` by default but can be changed to any number from `0`-`9`.
+Some sensors may support additional addresses from `A`-`Z` and `a`-`z`.
+
+Rather than explaining all the commands, I will just point you to page 8 (Table 5) of [[2]](http://www.sdi-12.org/current_specification/SDI-12_version-1_4-Jan-10-2019.pdf).
+Note that all commands begin with the sensor address (or `?` for wildcard) and end with `!`.
+Certain manufacturers may have additional commands, but the main command set should be unchanged.
+
+#### Timing
+
+The image below shows a timing diagram for the SDI-12 protocol.
+The tolerance for all timing is &pm;0.40 ms.
+The only exception is the time between the stop bit of one character and the start bit of the next which should not be more than 1.66 ms.
+
+![SDI-12 timing](img/sdi12-timing.png)
+
+It should be noted that this diagram shows the **voltage levels** and not the **binary states**.
+As in, a break is a period of spacing, which is a high voltage, but a low binary state.
+
+The full communication protocol (for the data recorder) is explained below:
+
+- data recorder sends a break by setting the data line to spacing (5 V) for at least 12 ms.
+The sensor will never recognise a break less than 6.5 ms and will always recognise one greater than 12 ms.
+- data recorder sends marking (0 V) for 8.33 ms.
+This cannot be any longer than 100 ms otherwise sensors will go to sleep.
+- data recorder sends the command to the sensor.
+- data recorder gives up control of the data line within 7.5 ms of the end of the last stop bit and waits to receive data.
+
+This must be repeated for every command if the sensors have fallen asleep again.
+This occurs if a different sensor is addressed or if 87 ms of marking was detected by the sensor.
+
+#### Retries (not yet implemented)
+
+A data recorder must support retries.
+A retry is needed if there was:
+
+- no response from the sensor at least 16.67 ms after the last stop bit of the command.
+- 8.33 ms of marking on the data line, after receiving the start bit of the response
+- an invalid response
+
+The first retry can be issued between 16.67 ms and 87 ms from the end of the last stop bit of the command.
+If no valid response is received after retrying at least two times (with one retry more than 100 ms after the end of the break), the entire sequence of break and retries should be repeated two more times.
+
 ## Implementation
+
+## Glossary
+
+| Term | Meaning |
+| --- | --- |
+| CRC | cyclic redundancy check, a form of error checking |
+| data recorder | the microcontroller being used to communicate with the sensor |
 
 ## References
 
-[1] Wikipedia Contributers, "SDI-12," Wikipedia, The Free Encyclopedia., 6 June 2017. [Online]. Available: https://en.wikipedia.org/w/index.php?title=SDI-12&oldid=784017978. [Accessed 25 May 2020].  
-[2] SDI-12 Support Group, "SDI-12 Specification," 10 January 2019. [Online]. Available: http://www.sdi-12.org/specification.php. [Accessed 2020 May 25].
+[1] Wikipedia Contributers, "SDI-12," Wikipedia, The Free Encyclopedia., 6 June 2017. [Online]. Available: [https://en.wikipedia.org/w/index.php?title=SDI-12&oldid=784017978](https://en.wikipedia.org/w/index.php?title=SDI-12&oldid=784017978). [Accessed 25 May 2020].  
+[2] SDI-12 Support Group, "SDI-12 Specification," 10 January 2019. [Online]. Available: [http://www.sdi-12.org/specification.php](http://www.sdi-12.org/specification.php). [Accessed 2020 May 25].
