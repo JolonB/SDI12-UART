@@ -13,7 +13,8 @@ Want to add a new configuration (or two)?
 Simply create a new folder continuing the numbering of the other folders.
 Create a schematic (or modify an existing one) in [KiCad](https://kicad-pcb.org/download/) (it's free!).
 Provide screenshots of the schematics to show others what it looks like without making them download KiCad.
-Make sure to fill in the README in the `config_x/` directory and add to the table in the root README.
+Make sure to fill in the README in the `config_x/` directory and add to the table in the root README.  
+Submit your changes as a pull request.
 
 ### Bugs
 
