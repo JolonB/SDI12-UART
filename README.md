@@ -125,14 +125,33 @@ If no valid response is received after retrying at least two times (with one ret
 
 ## Implementation
 
+The implementation of SDI-12 was based heavily on the work done in [3].
+The goal is to make this information a bit more widely available and to provide alternate approaches for different microcontrollers.
+
+There are so many types of microcontrollers so it's impossible to provide one solution for all of them.
+This repository will showcase a few different ways to make it work.
+Feel free to submit a pull request if you can add another configuration or make any changes to something.
+
+At the moment, there are 4 properties of the microcontroller you need to be aware of: inverted, reinitialisable, default voltage, and high voltage level.
+Refer to the [glossary](#glossary) for definitions of these terms.
+
+| Configuration | | Inverted | Reinitialisable | Default Voltage | High Voltage [V] |
+| --- | --- | --- | --- | --- | --- |
+| [1](hardware/config_1) | | No | Yes | N/A | 3.3 |
+
 ## Glossary
 
 | Term | Meaning |
 | --- | --- |
-| CRC | cyclic redundancy check, a form of error checking |
-| data recorder | the microcontroller being used to communicate with the sensor |
+| CRC | Cyclic redundancy check, a form of error checking. |
+| data recorder | The microcontroller being used to communicate with the sensor. |
+| default voltage | The voltage (HIGH or LOW) on the Tx pin when not transmitting. This is almost always going to be HIGH, but it may vary for some microcontrollers. Only important if UART is not reinitialisable. |
+| high voltage level | The voltage (in volts) of a HIGH signal. |
+| inverted | In this context, refers to the UART driver outputting an inverted signal. This is likely the only case where default voltage is LOW. |
+| reinitialisable | The ability for the UART to be initialised again after being deinitialised. |
 
 ## References
 
 [1] Wikipedia Contributers, "SDI-12," Wikipedia, The Free Encyclopedia., 6 June 2017. [Online]. Available: [https://en.wikipedia.org/w/index.php?title=SDI-12&oldid=784017978](https://en.wikipedia.org/w/index.php?title=SDI-12&oldid=784017978). [Accessed 25 May 2020].  
-[2] SDI-12 Support Group, "SDI-12 Specification," 10 January 2019. [Online]. Available: [http://www.sdi-12.org/specification.php](http://www.sdi-12.org/specification.php). [Accessed 2020 May 25].
+[2] SDI-12 Support Group, "SDI-12 Specification," 10 January 2019. [Online]. Available: [http://www.sdi-12.org/specification.php](http://www.sdi-12.org/specification.php). [Accessed 2020 May 25].  
+[3] A. Saari, S. A. Hinzey, J. R. Frigo, M. C. Proicou and L. Borges, "Using SDI-12 with ST microelectronics MCU's," Los Alamos National Lab, Los Alamos, 2015.  
