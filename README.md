@@ -6,9 +6,10 @@ May also work for any sort of single wire communications protocol (not tested).
 - [What is this?](#what-is-this)
 - [What is SDI-12?](#what-is-sdi-12)
 - [SDI-12 Protocol](#sdi-12-protocol)
-    - [Electrical Interface](#electrical-interface)
-    - [Communication](#communication)
+  - [Electrical Interface](#electrical-interface)
+  - [Communication](#communication)
 - [Implementation](#implementation)
+- [Glossary](#glossary)
 - [References](#references)
 
 ---
