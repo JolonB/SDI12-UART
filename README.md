@@ -155,4 +155,4 @@ Refer to the [glossary](#glossary) for definitions of these terms.
 
 [1] Wikipedia Contributers, "SDI-12," Wikipedia, The Free Encyclopedia., 6 June 2017. [Online]. Available: [https://en.wikipedia.org/w/index.php?title=SDI-12&oldid=784017978](https://en.wikipedia.org/w/index.php?title=SDI-12&oldid=784017978). [Accessed 25 May 2020].  
 [2] SDI-12 Support Group, "SDI-12 Specification," 10 January 2019. [Online]. Available: [http://www.sdi-12.org/specification.php](http://www.sdi-12.org/specification.php). [Accessed 2020 May 25].  
-[3] A. Saari, S. A. Hinzey, J. R. Frigo, M. C. Proicou and L. Borges, "Using SDI-12 with ST microelectronics MCU's," Los Alamos National Lab, Los Alamos, 2015.  
+[3] A. Saari, S. A. Hinzey, J. R. Frigo, M. C. Proicou and L. Borges, "Using SDI-12 with ST microelectronics MCU's", Los Alamos National Lab, Los Alamos, 2015.  

@@ -8,14 +8,26 @@ Working is shown in case there are mistakes so people can correct them and to pr
 The equations provide help for minimising current in power critical situations (such as battery power, which SDI-12 sensors may be connected to).
 However, if you want to skip straight to the implementation, just look at the schematic image.
 
-## Level shifter 3.3 -> 5
+## Level shifter
 
-The most energy efficient level shifter design I could come up with is shown below.
-It uses two inverting stages to lower the current draw as much as possible.
-This level shifter is unidirectional as there is no need for it to be bidirectional.
+The most energy efficient level shifter designs I could come up with is shown below.
+This assumes it is being fed into a high impedance input, such as a microcontroller or the gate of another MOSFET.
+The level shifters are unidirectional as there is no need for them to be bidirectional.
+The 1 M&Omega; resistors represent the load, which should be high impedance.
+The 100 k&Omega; resistors can be increased to reduce the current, but increasing them too far will cause it to output the wrong voltage.
+There are some instructions below for selecting the 3.3->5 Inverted level shifter, but this information may also apply to all the other designs.
 
-![Level shifter](img/level_shifter.png)  
+![Level shifters](img/level_shifter.png)  
+[Link to simulation](https://www.falstad.com/circuit/circuitjs.html?cct=$+1+0.000005+7.010541234668786+72+5+43%0Af+48+160+16+160+32+1.5+0.02%0Ar+16+144+16+96+0+100000%0AR+16+96+16+64+0+0+40+3.3+0+0+0.5%0Aw+64+160+64+96+0%0Aw+64+96+16+96+0%0AS+16+176+16+192+0+1+false+0+2%0Ag+0+192+0+208+0%0AR+32+192+32+208+0+0+40+5+0+0+0.5%0Aw+16+144+-16+144+0%0Aw+48+160+64+160+0%0Aw+64+336+80+336+0%0Aw+32+320+0+320+0%0Ag+32+352+32+368+0%0AR+32+272+32+240+0+0+40+3.3+0+0+0.5%0Ar+32+320+32+272+0+100000%0Af+64+336+32+336+32+1.5+0.02%0AS+80+336+96+336+0+0+false+0+2%0AR+96+320+112+320+0+0+40+5+0+0+0.5%0Ag+96+352+112+352+0%0Ag+320+352+336+352+0%0AR+320+320+336+320+0+0+40+3.3+0+0+0.5%0AS+304+336+320+336+0+0+false+0+2%0Af+288+336+256+336+32+1.5+0.02%0Ar+256+320+256+272+0+100000%0AR+256+272+256+240+0+0+40+5+0+0+0.5%0Ag+256+352+256+368+0%0Aw+256+320+224+320+0%0Aw+288+336+304+336+0%0Aw+272+160+288+160+0%0Aw+240+144+208+144+0%0AR+256+192+256+208+0+0+40+3.3+0+0+0.5%0Ag+224+192+224+208+0%0AS+240+176+240+192+0+1+false+0+2%0AR+240+96+240+64+0+0+40+5+0+0+0.5%0Ar+240+144+240+96+0+100000%0Af+272+160+240+160+0+1.5+0.02%0AR+288+80+288+64+0+0+40+3.3+0+0+0.5%0Aw+288+80+288+160+0%0Ax+-15+51+91+54+4+12+3.3-%3E5%5CsNon-inverted%0Ax+0+396+81+399+4+12+5-%3E3.3%5CsInverted%0Ax+220+49+326+52+4+12+3.3-%3E5%5CsNon-inverted%0Ax+232+396+313+399+4+12+3.3-%3E5%5CsInverted%0Ag+-16+176+-16+192+0%0Ar+-16+144+-16+176+0+1000000%0Ar+0+320+0+352+0+1000000%0Ag+0+352+0+368+0%0Ag+224+352+224+368+0%0Ar+224+320+224+352+0+1000000%0Ag+208+176+208+192+0%0Ar+208+144+208+176+0+1000000%0Ao+2+64+0+4099+5+0.00009765625+0+2+2+3%0Ao+13+64+0+4099+5+0.00009765625+1+2+13+3%0Ao+33+64+0+4099+5+0.00009765625+2+2+33+3%0Ao+24+64+0+4099+5+0.00009765625+3+2+24+3%0A)
+
+The image below shows the output of the level shifter being fed into the input of a CMOS inverter.
+
+![Level shifter](img/level_shifter_inverter.png)  
 [Link to simulation](https://www.falstad.com/circuit/circuitjs.html?cct=$+1+0.000005+16.817414165184545+84+5+43%0Aw+272+208+272+192+0%0Af+240+240+272+240+32+1.5+0.02%0Aw+272+144+352+144+0%0Aw+352+144+352+160+0%0Ag+208+256+192+256+0%0AR+208+224+192+224+0+0+40+3.3+0+0+0.5%0AS+224+240+208+240+0+0+false+0+2%0Aw+240+240+224+240+0%0Ag+272+256+272+272+0%0Aw+352+208+384+208+0%0Af+320+240+352+240+32+1.5+0.02%0Aw+320+240+304+240+0%0Af+320+176+352+176+33+1.5+0.02%0Ag+352+256+352+272+0%0Aw+352+208+352+224+0%0Aw+320+176+304+176+0%0Aw+304+176+304+208+0%0Aw+352+208+352+192+0%0Aw+304+208+304+240+0%0Aw+272+224+272+208+0%0Aw+272+208+304+208+0%0Aw+272+160+272+144+0%0AR+272+144+272+128+0+0+40+5+0+0+0.5%0Ar+272+192+272+160+0+1000000%0Ao+22+64+3+4099+5+0.00009765625+0+1%0A38+23+0+1000000+10000000+Resistance%0A)
+
+---
+
+If you want to work out the value of the resistor, follow these "steps" (or just skip to the end for the final equations).
 
 When <img src="https://render.githubusercontent.com/render/math?math=V_{gs} = 3.3 \text{V}">, the lower left nMOS will be in the linear/non-saturation/ohmic/triode region, so the current through it is given by the equation:
 
@@ -71,3 +83,6 @@ Make sure you play around with the values in Desmos to get the optimal value for
 
 ![Inverter](img/inverter.png)  
 [Link to simulation](https://www.falstad.com/circuit/circuitjs.html?cct=$+1+0.000005+16.817414165184545+84+5+43%0Aw+352+144+352+160+0%0Ag+272+224+256+224+0%0AR+272+192+256+192+0+0+40+5+0+0+0.5%0AS+288+208+272+208+0+1+false+0+2%0Aw+352+208+384+208+0%0Af+320+240+352+240+32+1.5+0.02%0Aw+320+240+304+240+0%0Af+320+176+352+176+33+1.5+0.02%0Ag+352+256+352+272+0%0Aw+352+208+352+224+0%0Aw+320+176+304+176+0%0Aw+304+176+304+208+0%0Aw+352+208+352+192+0%0Aw+304+208+304+240+0%0AR+352+144+352+128+0+0+40+5+0+0+0.5%0Aw+288+208+304+208+0%0Ao+14+64+3+4099+5+0.00009765625+0+1%0A)
+
+This is a basic CMOS inverter.
+This does not have a level shifting stage because the input is already 5 V.
