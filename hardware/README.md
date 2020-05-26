@@ -15,7 +15,9 @@ This assumes it is being fed into a high impedance input, such as a microcontrol
 The level shifters are unidirectional as there is no need for them to be bidirectional.
 The 1 M&Omega; resistors represent the load, which should be high impedance.
 The 100 k&Omega; resistors can be increased to reduce the current, but increasing them too far will cause it to output the wrong voltage.
-There are some instructions below for selecting the 3.3->5 Inverted level shifter, but this information may also apply to all the other designs.
+
+There are some instructions below for selecting the resistor for the 3.3->5 Inverted level shifter, but this information may also apply to all the other designs.
+This does require extra information about the device the output is going in to, so may not be useful in most instances.
 
 ![Level shifters](img/level_shifter.png)  
 [Link to simulation](https://www.falstad.com/circuit/circuitjs.html?cct=$+1+0.000005+7.010541234668786+72+5+43%0Af+48+160+16+160+32+1.5+0.02%0Ar+16+144+16+96+0+100000%0AR+16+96+16+64+0+0+40+3.3+0+0+0.5%0Aw+64+160+64+96+0%0Aw+64+96+16+96+0%0AS+16+176+16+192+0+1+false+0+2%0Ag+0+192+0+208+0%0AR+32+192+32+208+0+0+40+5+0+0+0.5%0Aw+16+144+-16+144+0%0Aw+48+160+64+160+0%0Aw+64+336+80+336+0%0Aw+32+320+0+320+0%0Ag+32+352+32+368+0%0AR+32+272+32+240+0+0+40+3.3+0+0+0.5%0Ar+32+320+32+272+0+100000%0Af+64+336+32+336+32+1.5+0.02%0AS+80+336+96+336+0+0+false+0+2%0AR+96+320+112+320+0+0+40+5+0+0+0.5%0Ag+96+352+112+352+0%0Ag+320+352+336+352+0%0AR+320+320+336+320+0+0+40+3.3+0+0+0.5%0AS+304+336+320+336+0+0+false+0+2%0Af+288+336+256+336+32+1.5+0.02%0Ar+256+320+256+272+0+100000%0AR+256+272+256+240+0+0+40+5+0+0+0.5%0Ag+256+352+256+368+0%0Aw+256+320+224+320+0%0Aw+288+336+304+336+0%0Aw+272+160+288+160+0%0Aw+240+144+208+144+0%0AR+256+192+256+208+0+0+40+3.3+0+0+0.5%0Ag+224+192+224+208+0%0AS+240+176+240+192+0+1+false+0+2%0AR+240+96+240+64+0+0+40+5+0+0+0.5%0Ar+240+144+240+96+0+100000%0Af+272+160+240+160+0+1.5+0.02%0AR+288+80+288+64+0+0+40+3.3+0+0+0.5%0Aw+288+80+288+160+0%0Ax+-15+51+91+54+4+12+3.3-%3E5%5CsNon-inverted%0Ax+0+396+81+399+4+12+5-%3E3.3%5CsInverted%0Ax+220+49+326+52+4+12+3.3-%3E5%5CsNon-inverted%0Ax+232+396+313+399+4+12+3.3-%3E5%5CsInverted%0Ag+-16+176+-16+192+0%0Ar+-16+144+-16+176+0+1000000%0Ar+0+320+0+352+0+1000000%0Ag+0+352+0+368+0%0Ag+224+352+224+368+0%0Ar+224+320+224+352+0+1000000%0Ag+208+176+208+192+0%0Ar+208+144+208+176+0+1000000%0Ao+2+64+0+4099+5+0.00009765625+0+2+2+3%0Ao+13+64+0+4099+5+0.00009765625+1+2+13+3%0Ao+33+64+0+4099+5+0.00009765625+2+2+33+3%0Ao+24+64+0+4099+5+0.00009765625+3+2+24+3%0A)
@@ -86,3 +88,33 @@ Make sure you play around with the values in Desmos to get the optimal value for
 
 This is a basic CMOS inverter.
 This does not have a level shifting stage because the input is already 5 V.
+
+## Tristate Buffer
+
+### Suggested chips
+
+| Part number | Package |
+| --- | --- |
+| [SN74LV125A](http://www.ti.com/lit/ds/symlink/sn74lv125a.pdf) | TVSOP, SOIC, SOP, SSOP, TSSOP, DIP |
+| [SN74LVC2G125](http://www.ti.com/lit/ds/symlink/sn74lvc2g240.pdf) | SM8, VSSOP, DSBGA |
+| [SN74LVC2G241](http://www.ti.com/lit/ds/symlink/sn74lvc2g241.pdf) | SM8, VSSOP, DSBGA |
+
+There are some differences between these buffers.
+All examples will use **SN74LV125A**, so be aware of any changes you may need to make.
+The other chips may be better if you don't need a DIP package as they only have two buffers rather than four.
+
+## Basic Circuit
+
+The following image shows a basic circuit which would work for configuration 1.
+This section aims to explain how to modify this circuit to work for any other configuration.
+
+![configuration](img/config_1_template.png)  
+[Link to "simulation"](https://circuitverse.org/users/21100/projects/95794)
+
+Notes:
+
+- the inverters at the inputs represent the level shifting inverters.
+  - these are all inverting because inverting level shifters have a lower current draw.
+- only one NOR gate is used for its intended function, the rest are used as inverters
+- if the default Tx voltage is 0, place the NOR inverter *before* the NOR gate (as shown); if the default Tx voltage is 1, place the NOR inverter *after* the NOR gate.
+- the inverter does not need to be on the Rx buffer enable pin (as shown), it could be connected to the Tx which would invert the control.
