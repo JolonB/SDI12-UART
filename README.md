@@ -138,7 +138,7 @@ Refer to the [glossary](#glossary) for definitions of these terms.
 
 | Configuration | | Inverted | Reinitialisable | Default Voltage | High Voltage [V] |
 | --- | --- | --- | --- | --- | --- |
-| [1](hardware/config_1) | | No | Yes | N/A | 3.3 |
+| [1](hardware/config_1) | | No | No | HIGH | 3.3 |
 
 ## Glossary
 
