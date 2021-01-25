@@ -9,18 +9,18 @@ At the moment, contributing is lawless, so feel free to contribute to *this* doc
 
 ### Configurations
 
-Want to add a new configuration (or two)?
+Want to add a new design (or two)?
 Simply create a new folder continuing the numbering of the other folders.
 Create a schematic (or modify an existing one) in [KiCad](https://kicad-pcb.org/download/) (it's free!).
 Provide screenshots of the schematics to show others what it looks like without making them download KiCad.
-Make sure to fill in the README in the `config_x/` directory and add to the table in the root README.
-If you're stuck on what to add, look at config 1.  
+Make sure to fill in the README in the `design_x/` directory and add to the table in the root README.
+If you're stuck on what to add, look at design 1.  
 Submit your changes as a pull request.
 
 ### Bugs
 
 Please don't add bugs.
-But if you want to fix any issues you've found with the configurations, that'd be great.
+But if you want to fix any issues you've found with the designs, that'd be great.
 Just submit a pull request with the changes.  
 If you don't know how to fix it, feel free to submit a bug report instead.
 There are no guidelines for bug reports (yet), so just try to provide as much information as you can.

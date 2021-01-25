@@ -127,18 +127,45 @@ If no valid response is received after retrying at least two times (with one ret
 ## Implementation
 
 The implementation of SDI-12 was based heavily on the work done in [3].
+The work I did can be found [here](https://jolonb.github.io/assets/pdf/final_report.pdf) if you're interested.
 The goal is to make this information a bit more widely available and to provide alternate approaches for different microcontrollers.
 
 There are so many types of microcontrollers so it's impossible to provide one solution for all of them.
 This repository will showcase a few different ways to make it work.
-Feel free to submit a pull request if you can add another configuration or make any changes to something.
+Feel free to submit a pull request if you can add another design or make any changes to something.  
+In any case, the base design will work for any microcontroller as the hardware works with standard UART.
+Different designs can be created for specific use cases.
 
-At the moment, there are 4 properties of the microcontroller you need to be aware of: inverted, reinitialisable, default voltage, and high voltage level.
+The standard implementation is shown below.
+
+![SDI-UART implementation](img/sdi-uart-implementation.png)
+
+A simulation can be found [here](https://www.falstad.com/circuit/circuitjs.html?ctz=CQAgDOB0YzCsICMk4wCwCY0HY4A4c4M4FURSwAoRORJNNJANggy2YlfPMoDMQ2jRCwF48HJEhRQwGSgCVR4xAyVJEGcFrQQEnKHEoAnNYmxM1grYliUA5pfYYxAnVqomN4gMzeLXkG8Ca1tFAO8wIWcBbE19Nz13FD4kc0CMCHCMyWQ9aDkaOmILb2yzEuyuUnskaKCo8R19KgB3ATgSyPaLLE5KAEkJXoEnN05pQzarYeLXPrbhVjcA4db6ITSA8vBKBdUVBvWdqY7Av0CiM4s152U070vttfDzvAhfa4GQN6vmX-HqoU-ogNCAAJz+UFcXSUAAywOiAFphLVxJkQLwAIYAGwAzgBTbhUeEoiEgZEWMnorF4wl6Xaoo4gzQHY7qFn7UHMtnc7lk7lrB6aD4XTSzQWXWZC1KfNrSqXBcWUADKgUVpzQKPFWhpBK0cgAsiBNT03AxxKsBMl4SaYppzXb3BicXr6UaUSKKf8rYYST0wOIvRk0ZJdXSedFg38o89I8tIwGIxbE1s0lQAB7GxBgkZ0NBMMXsKIgeT4gDG+IAlgA3fGUTOYYUwY1kCLeY21EDK-EAOwAJvXyUx28RGHgEMRsB3QQAJSt2AAWAB1cS0F72V8qACL9ZEYFdGctV6uVnt2QeIphFbxT7A54bF2EAexaK7XG9x293GhXBP7p-PTNEWwTIMBzREgiQUpp00AAVdMVwAB1PC8mB8G9yW8RgsIgYt5AQ3FkJ7C9TgycDNQEUFiy3SsjFQzQwSnCD-GbYsADEAHkAFcABdKAAI3ZY1oO8RBxDwT5Mxods0mcTQ7xggRETLBdMR7Ht8WxFceKMStEVxHjMR4-EV34rjeF4fE6KAA).
+The tri-state buffer shown in the simulation is only implemented as it is because the simulation tool does not have a dedicated tri-state buffer component. 
+The configuration of it (with the internally inverted input) varies between chips.
+Some are sold with a single inverted channel, while others will require external signal inversion.
+This could be achieved by using another channel of the NAND gate.
+In either case, the voltage on the Dir pin will be dependent on the configuration of the inverter.
+As such, the Dir pin may need to be *HI* when the SDI-12 device is sending, as opposed to being *LO* in the simulation.
+For consistency, the configuration in the simulation is the standard, as setting Dir to *LO* implies it is in a passive state, which the receive state is.  
+In this implementation, you set the FOut pin *LO* to force a *HI* output (for sending a break).
+While the FOut pin is *HI* (default state), the output will be the inverse of the Tx pin.
+The truth table for this is shown below.
+
+| FOut | Tx | OUT |
+| --- | --- | --- |
+| 0 | X | 1 |
+| 1 | 0 | 1 |
+| 1 | 1 | 0 |
+
+When receiving, the Dir pin is set *LO* and data will be transmitted through the tri-state buffer and inverted to match the UART signals.
+
+<!-- At the moment, there are 4 properties of the microcontroller you need to be aware of: inverted, reinitialisable, default voltage, and high voltage level.
 Refer to the [glossary](#glossary) for definitions of these terms.
 
 | Configuration | | Inverted | Reinitialisable | Default Voltage | High Voltage [V] |
 | --- | --- | --- | --- | --- | --- |
-| [1](hardware/config_1) | | No | Yes | N/A | 3.3 |
+| [1](hardware/config_1) | | No | No | LOW | 3.3 | -->
 
 ## Glossary
 
