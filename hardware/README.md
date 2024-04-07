@@ -31,45 +31,45 @@ The image below shows the output of the level shifter being fed into the input o
 
 If you want to work out the value of the resistor, follow these "steps" (or just skip to the end for the final equations).
 
-When <img src="https://render.githubusercontent.com/render/math?math=V_{gs} = 3.3 \text{V}">, the lower left nMOS will be in the linear/non-saturation/ohmic/triode region, so the current through it is given by the equation:
+When $V_{gs} = 3.3 \text{V}$, the lower left nMOS will be in the linear/non-saturation/ohmic/triode region, so the current through it is given by the equation:
 
-<img src="https://render.githubusercontent.com/render/math?math=I_{ds} = \beta((V_{gs}-V_{t})V_{ds} - \frac{V_{ds}^2}{2})">
+$I_{ds} = \beta((V_{gs}-V_{t})V_{ds} - \frac{V_{ds}^2}{2})$
 
 We will look at the left half of the circuit first.
-We know that the current through the resistor is <img src="https://render.githubusercontent.com/render/math?math=I_{R} = \frac{V_{dd} - V_{ds}}{R}"> and that <img src="https://render.githubusercontent.com/render/math?math=I_{R} = I_{ds}"> at all times.
+We know that the current through the resistor is $I_{R} = \frac{V_{dd} - V_{ds}}{R}$ and that $I_{R} = I_{ds}$ at all times.
 
 If we equate these and rearrange, we get:
 
-<img src="https://render.githubusercontent.com/render/math?math=V_{ds}^2 - 2(\frac{1}{R\beta}%2B 2V_{gs}-V_{t})V_{ds}%2B 2\frac{V_{dd}}{R\beta} = 0">
+$V_{ds}^2 - 2(\frac{1}{R\beta}+ 2V_{gs}-V_{t})V_{ds}+ 2\frac{V_{dd}}{R\beta} = 0$
 
-We now know the input into the CMOS inverter is equal to <img src="https://render.githubusercontent.com/render/math?math=V_{ds}">.
-Assuming the resistance is large (>1k), we know that the actual value of <img src="https://render.githubusercontent.com/render/math?math=V_{ds}"> is the lower solution to the quadratic.
+We now know the input into the CMOS inverter is equal to $V_{ds}$.
+Assuming the resistance is large (>1k), we know that the actual value of $V_{ds}$ is the lower solution to the quadratic.
 Interestingly, the upper solution is <5V, so is technically valid but would not be the correct solution.
 Therefore, we have:
 
-<img src="https://render.githubusercontent.com/render/math?math=V_{ds} = \frac{1}{R\beta} %2B V_{gs} - V_{t} - \sqrt{(\frac{1}{R\beta} %2B V_{gs} - V_{t})^2 - 2\frac{V_{dd}}{R\beta}}">
+$V_{ds} = \frac{1}{R\beta} + V_{gs} - V_{t} - \sqrt{(\frac{1}{R\beta} + V_{gs} - V_{t})^2 - 2\frac{V_{dd}}{R\beta}}$
 
 Therefore, the current through the left branch is:
 
-<img src="https://render.githubusercontent.com/render/math?math=I_{ds} = \frac{V_{dd} - V_{ds}}{R} = \frac{V_{dd} - \left(\frac{1}{R\beta} %2B V_{gs} - V_{t} - \sqrt{(\frac{1}{R\beta} %2B V_{gs} - V_{t})^2 - 2\frac{V_{dd}}{R\beta}}\right)}{R}">
+$I_{ds} = \frac{V_{dd} - V_{ds}}{R} = \frac{V_{dd} - \left(\frac{1}{R\beta} + V_{gs} - V_{t} - \sqrt{(\frac{1}{R\beta} + V_{gs} - V_{t})^2 - 2\frac{V_{dd}}{R\beta}}\right)}{R}$
 
-when <img src="https://render.githubusercontent.com/render/math?math=V_{gs} = 3.3 \text{V}">
+when $V_{gs} = 3.3 \text{V}$
 
-The calculation for when <img src="https://render.githubusercontent.com/render/math?math=V_{gs} = 0 \text{V}"> is a bit different in that it sets an upper bound for the resistance provided by the resistor. 
-You need to know the value of <img src="https://render.githubusercontent.com/render/math?math=I_{dss}"> for the transistor.
+The calculation for when $V_{gs} = 0 \text{V}$ is a bit different in that it sets an upper bound for the resistance provided by the resistor. 
+You need to know the value of $I_{dss}$ for the transistor.
 To simplify the explanation, this is the maximum current while the transistor is off and the value can be found on the datasheet.
-Knowing this, we need to set the resistance such that <img src="https://render.githubusercontent.com/render/math?math=I_{R} > I_{dss}">.
-Remember, <img src="https://render.githubusercontent.com/render/math?math=I_{dss}"> is the max current, so the current through the resistor will be limited to this value if a low enough resistance is selected.
-We can write this as <img src="https://render.githubusercontent.com/render/math?math=\frac{V_{dd}-V_{ds}}{R} > I_{dss} \Rightarrow R < \frac{V_{dd}-V_{ds}}{I_{dss}}">.
-Assuming this condition is satisfied, then <img src="https://render.githubusercontent.com/render/math?math=V_{ds} = V_{dd} - I_{dss}R">
+Knowing this, we need to set the resistance such that $I_{R} > I_{dss}$.
+Remember, $I_{dss}$ is the max current, so the current through the resistor will be limited to this value if a low enough resistance is selected.
+We can write this as $\frac{V_{dd}-V_{ds}}{R} > I_{dss} \Rightarrow R < \frac{V_{dd}-V_{ds}}{I_{dss}}$.
+Assuming this condition is satisfied, then $V_{ds} = V_{dd} - I_{dss}R$
 
-In short, the current through the left branch is <img src="https://render.githubusercontent.com/render/math?math=I_{ds} = \frac{V_{dd} - V_{ds}}{R} = \frac{V_{dd} - \left(\frac{1}{R\beta} %2B V_{gs} - V_{t} - \sqrt{(\frac{1}{R\beta} %2B V_{gs} - V_{t})^2 - 2\frac{V_{dd}}{R\beta}}\right)}{R}"> when <img src="https://render.githubusercontent.com/render/math?math=V_{gs} = 3.3 \text{V}"> and <img src="https://render.githubusercontent.com/render/math?math=I_{ds} = I_{dss}"> when <img src="https://render.githubusercontent.com/render/math?math=V_{gs} = 0 \text{V}">.
-<img src="https://render.githubusercontent.com/render/math?math=V_{ds}"> can be written as <img src="https://render.githubusercontent.com/render/math?math=V_{ds} = \frac{1}{R\beta} %2B V_{gs} - V_{t} - \sqrt{(\frac{1}{R\beta} %2B V_{gs} - V_{t})^2 - 2\frac{V_{dd}}{R\beta}}"> and <img src="https://render.githubusercontent.com/render/math?math=V_{ds} = V_{dd} - I_{dss}R">, respectively.
+In short, the current through the left branch is $I_{ds} = \frac{V_{dd} - V_{ds}}{R} = \frac{V_{dd} - \left(\frac{1}{R\beta} + V_{gs} - V_{t} - \sqrt{(\frac{1}{R\beta} + V_{gs} - V_{t})^2 - 2\frac{V_{dd}}{R\beta}}\right)}{R}$ when $V_{gs} = 3.3 \text{V}$ and $I_{ds} = I_{dss}$ when $V_{gs} = 0 \text{V}$.
+$V_{ds}$ can be written as $V_{ds} = \frac{1}{R\beta} + V_{gs} - V_{t} - \sqrt{(\frac{1}{R\beta} + V_{gs} - V_{t})^2 - 2\frac{V_{dd}}{R\beta}}$ and $V_{ds} = V_{dd} - I_{dss}R$, respectively.
 
 The next step is to feed the output of the circuit into the right branch.
-This will allow you to find the optimal values to minimise the current from the source because if the output voltage is too low, the pMOS transistor will switch to the linear/saturation region. A pMOS transistor is in the off state when <img src="https://render.githubusercontent.com/render/math?math=V_{gs_p} > V_{t_p}">.
-We know that <img src="https://render.githubusercontent.com/render/math?math=V_{gs_p} = V_{ds_{n1}} - V_{dd}"> and <img src="https://render.githubusercontent.com/render/math?math=V_{t_p}"> can be found on the datasheet.
-Therefore, we have a requirement that <img src="https://render.githubusercontent.com/render/math?math=V_{ds_{n1}} - V_{dd} > V_{t_p}">.
+This will allow you to find the optimal values to minimise the current from the source because if the output voltage is too low, the pMOS transistor will switch to the linear/saturation region. A pMOS transistor is in the off state when $V_{gs_p} > V_{t_p}$.
+We know that $V_{gs_p} = V_{ds_{n1}} - V_{dd}$ and $V_{t_p}$ can be found on the datasheet.
+Therefore, we have a requirement that $V_{ds_{n1}} - V_{dd} > V_{t_p}$.
 The overall current of the circuit appears to be the lowest when the pMOS is on the edge of the cutoff region (it's probably best to give it a bit of breathing room though).
 
 There's still a bit more work to do.
@@ -77,7 +77,7 @@ To get a rough idea of a resistance to use, look at [this graph](https://www.des
 The resistance is on the x-axis and should not be greater than the point at which the red and purple lines intersect.
 Past the intersection point, the pMOS is in linear/saturation.
 The blue line represents the current (though multiplied by 100,000) through the left nMOS.
-We can assume that if the pMOS is in the cutoff region that the right branch has minimal current (<img src="https://render.githubusercontent.com/render/math?math=I = I_{dss_p}">) therefore you only need to minimise the blue current curve.
+We can assume that if the pMOS is in the cutoff region that the right branch has minimal current ($I = I_{dss_p}$) therefore you only need to minimise the blue current curve.
 As mentioned before, give a bit of breathing room. The default configuration in the graph would be best at 6 M&Omega;.
 Make sure you play around with the values in Desmos to get the optimal value for your MOSFETs.
 
