@@ -55,7 +55,7 @@ $I_{ds} = \frac{V_{dd} - V_{ds}}{R} = \frac{V_{dd} - \left(\frac{1}{R\beta} + V_
 
 when $V_{gs} = 3.3 \text{V}$
 
-The calculation for when $V_{gs} = 0 \text{V}$ is a bit different in that it sets an upper bound for the resistance provided by the resistor. 
+The calculation for when $V_{gs} = 0 \text{V}$ is a bit different in that it sets an upper bound for the resistance provided by the resistor.
 You need to know the value of $I_{dss}$ for the transistor.
 To simplify the explanation, this is the maximum current while the transistor is off and the value can be found on the datasheet.
 Knowing this, we need to set the resistance such that $I_{R} > I_{dss}$.
@@ -73,7 +73,7 @@ Therefore, we have a requirement that $V_{ds_{n1}} - V_{dd} > V_{t_p}$.
 The overall current of the circuit appears to be the lowest when the pMOS is on the edge of the cutoff region (it's probably best to give it a bit of breathing room though).
 
 There's still a bit more work to do.
-To get a rough idea of a resistance to use, look at [this graph](https://www.desmos.com/calculator/3hmn6u5ff4). 
+To get a rough idea of a resistance to use, look at [this graph](https://www.desmos.com/calculator/3hmn6u5ff4).
 The resistance is on the x-axis and should not be greater than the point at which the red and purple lines intersect.
 Past the intersection point, the pMOS is in linear/saturation.
 The blue line represents the current (though multiplied by 100,000) through the left nMOS.

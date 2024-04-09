@@ -144,9 +144,9 @@ This consists of two tri-state buffers and one inverter.
 There may also need to be a high-value pull-down resistor (100–300kΩ) on the SDI-12 line, however, I'm not sure if that is built in to the sensor (if someone knows, let me know!)  
 _However_, this implementation is unlikely to work in most situations for three reasons:
 
-* It does not invert the logic. This only works if the microcontroller UART hardware supports inverted logic, or if the tri-state buffers are actually tri-state inverters.
-* It is assumed that this circuit operates at 5V because the SDI-12 specification requires 5V logic. If you are using a 3.3V microcontroller, you will need logic level shifters.
-* The TX line must be capable of sending a 12ms break signal. This can be done with hardware or sometimes in software (see [12-ms break](#12-ms-break)).
+- It does not invert the logic. This only works if the microcontroller UART hardware supports inverted logic, or if the tri-state buffers are actually tri-state inverters (see [logic inversion](#logic-inversion)).
+- It is assumed that this circuit operates at 5V because the SDI-12 specification requires 5V logic. If you are using a 3.3V microcontroller, you will need logic level shifters (see [logic levels](#logic-levels)).
+- The TX line must be capable of sending a 12ms break signal. This can be done with hardware or sometimes in software (see [12-ms break](#12-ms-break)).
 
 There are two modes of operation: transmit and receive.
 The specifics of how it works will depend on the hardware you purchase; this information explains the operation of the circuit in the image above.  
@@ -162,6 +162,16 @@ Refer to the [glossary](#glossary) for definitions of these terms.
 | Configuration | | Inverted | Reinitialisable | Default Voltage | High Voltage [V] |
 | --- | --- | --- | --- | --- | --- |
 | [1](hardware/config_1) | | No | No | LOW | 3.3 | -->
+
+### Logic Inversion
+
+TODO
+<!-- TODO -->
+
+### Logic Levels
+
+TODO
+<!-- TODO - maybe mention work in hardware/README.md -->
 
 ### 12-ms Break
 
