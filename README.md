@@ -136,29 +136,25 @@ Feel free to submit a pull request if you can add another design or make any cha
 In any case, the base design will work for any microcontroller as the hardware works with standard UART.
 Different designs can be created for specific use cases.
 
-The standard implementation is shown below.
+The most basic implementation is shown below.
 
-![SDI-UART implementation](img/sdi-uart-implementation.png)
+![Simplest SDI-UART implementation](img/sdi-uart-basic-implementation.png)
 
-A simulation can be found [here](https://www.falstad.com/circuit/circuitjs.html?ctz=CQAgDOB0YzCsICMk4wCwCY0HY4A4c4M4FURSwAoRORJNNJANggy2YlfPMoDMQ2jRCwF48HJEhRQwGSgCVR4xAyVJEGcFrQQEnKHEoAnNYmxM1grYliUA5pfYYxAnVqomN4gMzeLXkG8Ca1tFAO8wIWcBbE19Nz13FD4kc0CMCHCMyWQ9aDkaOmILb2yzEuyuUnskaKCo8R19KgB3ATgSyPaLLE5KAEkJXoEnN05pQzarYeLXPrbhVjcA4db6ITSA8vBKBdUVBvWdqY7Av0CiM4s152U070vttfDzvAhfa4GQN6vmX-HqoU-ogNCAAJz+UFcXSUAAywOiAFphLVxJkQLwAIYAGwAzgBTbhUeEoiEgZEWMnorF4wl6Xaoo4gzQHY7qFn7UHMtnc7lk7lrB6aD4XTSzQWXWZC1KfNrSqXBcWUADKgUVpzQKPFWhpBK0cgAsiBNT03AxxKsBMl4SaYppzXb3BicXr6UaUSKKf8rYYST0wOIvRk0ZJdXSedFg38o89I8tIwGIxbE1s0lQAB7GxBgkZ0NBMMXsKIgeT4gDG+IAlgA3fGUTOYYUwY1kCLeY21EDK-EAOwAJvXyUx28RGHgEMRsB3QQAJSt2AAWAB1cS0F72V8qACL9ZEYFdGctV6uVnt2QeIphFbxT7A54bF2EAexaK7XG9x293GhXBP7p-PTNEWwTIMBzREgiQUpp00AAVdMVwAB1PC8mB8G9yW8RgsIgYt5AQ3FkJ7C9TgycDNQEUFiy3SsjFQzQwSnCD-GbYsADEAHkAFcABdKAAI3ZY1oO8RBxDwT5Mxods0mcTQ7xggRETLBdMR7Ht8WxFceKMStEVxHjMR4-EV34rjeF4fE6KAA).
-The tri-state buffer shown in the simulation is only implemented as it is because the simulation tool does not have a dedicated tri-state buffer component. 
-The configuration of it (with the internally inverted input) varies between chips.
-Some are sold with a single inverted channel, while others will require external signal inversion.
-This could be achieved by using another channel of the NAND gate.
-In either case, the voltage on the Dir pin will be dependent on the configuration of the inverter.
-As such, the Dir pin may need to be *HI* when the SDI-12 device is sending, as opposed to being *LO* in the simulation.
-For consistency, the configuration in the simulation is the standard, as setting Dir to *LO* implies it is in a passive state, which the receive state is.  
-In this implementation, you set the FOut pin *LO* to force a *HI* output (for sending a break).
-While the FOut pin is *HI* (default state), the output will be the inverse of the Tx pin.
-The truth table for this is shown below.
+This consists of two tri-state buffers and one inverter.
+There may also need to be a high-value pull-down resistor (100–300kΩ) on the SDI-12 line, however, I'm not sure if that is built in to the sensor (if someone knows, let me know!)  
+_However_, this implementation is unlikely to work in most situations for three reasons:
 
-| FOut | Tx | OUT |
-| --- | --- | --- |
-| 0 | X | 1 |
-| 1 | 0 | 1 |
-| 1 | 1 | 0 |
+* It does not invert the logic. This only works if the microcontroller UART hardware supports inverted logic, or if the tri-state buffers are actually tri-state inverters.
+* It is assumed that this circuit operates at 5V because the SDI-12 specification requires 5V logic. If you are using a 3.3V microcontroller, you will need logic level shifters.
+* The TX line must be capable of sending a 12ms break signal. This can be done with hardware or sometimes in software (see [12-ms break](#12-ms-break)).
 
-When receiving, the Dir pin is set *LO* and data will be transmitted through the tri-state buffer and inverted to match the UART signals.
+There are two modes of operation: transmit and receive.
+The specifics of how it works will depend on the hardware you purchase; this information explains the operation of the circuit in the image above.  
+When the DIR pin is set HIGH, the transmitter buffer is activated.
+The signal on the Tx line will be propogated through to the SDI-12 line.
+It will also go to the receive buffer, however, the inverter disables the receive buffer so nothing is read.
+Technically, the RX tri-state buffer and inverter is optional if you choose to ignore any data received while transmitting, much like in [this circuit](https://archive.is/j75iI).
+If the RX tri-state buffer _is_ included, it can then be enabled by setting the DIR pin LOW and allowing data received from the SDI-12 sensor to be received.
 
 <!-- At the moment, there are 4 properties of the microcontroller you need to be aware of: inverted, reinitialisable, default voltage, and high voltage level.
 Refer to the [glossary](#glossary) for definitions of these terms.
