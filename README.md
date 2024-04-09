@@ -163,6 +163,49 @@ Refer to the [glossary](#glossary) for definitions of these terms.
 | --- | --- | --- | --- | --- | --- |
 | [1](hardware/config_1) | | No | No | LOW | 3.3 | -->
 
+### 12-ms Break
+
+If your microcontroller doesn't support sending a break signal of at least 12 ms, you will need to implement it another way.
+There are two ways this can be done: with hardware, or with software.
+
+The software approach is cheaper, but is not supported by all microcontrollers.
+To do this, you need to close the serial device, set the output on the Tx line for 12 ms, and re-enable the serial device.
+The following Arduino code shows how this could be done:
+
+```c++
+void sendSDI12Break() {
+  Serial.flush();  // make sure everything has been sent
+  Serial.end();  // disable serial
+  pinMode(txPin, OUTPUT);  // set Tx pin to output
+  digitalWrite(txPin, HIGH);  // or LOW if inverting signal with hardware
+  delay(12);  // break for minimum of 12ms
+  Serial.begin(1200, 7E1);  // re-enable serial
+}
+```
+
+Remember, this isn't guaranteed to work on all microcontrollers.
+I suggest testing this code (or similar code) before selecting the hardware.
+
+The hardware approach is guaranteed to work for all devices, provided they have one free GPIO pin.
+This involves connecting the Tx signal to the new GPIO through either an AND or OR gate (depending on whether you've inverted the logic in the microcontroller or on the PCB).
+You can see this implemented below.
+In this circuit, it is assumed that the microcontroller is inverting the logic, so an OR gate is used.
+This allows the break signal to be sent by setting the FOut ("**F**orce **Out**") pin HIGH for 12 ms.
+
+![SDI-UART implementation](img/basic-implementation-fout.png)
+
+While the FOut pin is LOW (default state), the output will be the same as the Tx pin.
+The truth table for this is shown below.
+
+| FOut | Tx | OUT |
+| --- | --- | --- |
+| 0 | 0 | 0 |
+| 0 | 1 | 1 |
+| 1 | X | 1 |
+
+If you were inverting the logic in hardware, such as with tri-state buffers, you might consider using an AND gate instead and set the FOut pin LOW.
+The truth table would change in this situation.
+
 ## Glossary
 
 | Term | Meaning |
