@@ -33,3 +33,4 @@ jobs:
       uses: gaurav-nelson/github-action-markdown-link-check@1.0.15
       with:
         use-verbose-mode: yes
+        config-file: .github/rules/mlc_config.json
